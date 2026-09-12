@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Phone Receptionist for Small Businesses | JK Automation</title>
+  <meta name="description" content="Custom AI phone receptionists that answer 24/7, book appointments, and handle FAQs. Live in days, not months.">
+  <link rel="icon" href="logo.svg">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Google tag (gtag.js) AW-18446712626 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18446712626"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18446712626');
+    // After you create the Ads conversion action, paste send_to here as AW-18446712626/XXXXXXXX
+    window.JK_ADS_CONVERSION_SEND_TO = 'AW-18446712626/umvJCPDZqvUcELL-idxE';
+  </script>
+</head>
+<body>
+  <header>
+    <img src="logo.svg" alt="JK Automation" width="56" height="62">
+    <p>JK Automation</p>
+  </header>
+
+  <main>
+    <section>
+      <h1>Never miss another customer call.</h1>
+      <p class="lede">JK Automation builds a custom AI phone receptionist — a virtual front desk that answers 24/7, books appointments, and handles FAQs. Live in days, not months.</p>
+      <p class="actions">
+        <a class="btn" data-track="book_walkthrough" data-placement="hero" href="https://calendar.app.google/WTUQNErLQ6btWFNG7">Book a 15-minute walkthrough</a>
+        <a class="mail" data-track="email_john" data-placement="hero" href="mailto:john@jkautomationsolutions.com">Or email John</a>
+      </p>
+    </section>
+
+    <section>
+      <h2>What you get</h2>
+      <ul>
+        <li><strong>Answers every call, 24/7</strong> Nights, weekends, and lunch rushes. No voicemail. No missed first impression.</li>
+        <li><strong>Books appointments while you work</strong> Callers get on the calendar — not a callback list you never get through.</li>
+        <li><strong>Custom-built. Live in days.</strong> Fitted to your scripts, hours, and FAQs. Not a generic bot. Not a months-long project.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Who it’s for</h2>
+      <p>Small businesses that live on the phone — equestrian, medical, wellness, and real estate teams that can’t afford a missed inquiry.</p>
+    </section>
+
+    <section class="band">
+      <h2>Ready to stop losing calls?</h2>
+      <p>Fifteen minutes. We’ll map how an AI receptionist would cover your line — then you decide.</p>
+      <a class="btn btn-light" data-track="book_walkthrough" data-placement="bottom" href="https://calendar.app.google/WTUQNErLQ6btWFNG7">Book a 15-minute walkthrough</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>JK Automation</p>
+  </footer>
+  <script>
+    (function () {
+      function track(name, params) {
+        if (typeof gtag !== 'function') return;
+        gtag('event', name, params || {});
+      }
+      function fireAdsConversion() {
+        if (typeof gtag !== 'function') return;
+        var sendTo = window.JK_ADS_CONVERSION_SEND_TO;
+        if (!sendTo) return;
+        gtag('event', 'conversion', { send_to: sendTo });
+      }
+      document.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a[data-track]') : null;
+        if (!a) return;
+        var name = a.getAttribute('data-track');
+        var placement = a.getAttribute('data-placement') || '';
+        track(name, { event_category: 'engagement', event_label: placement, transport_type: 'beacon' });
+        if (name === 'book_walkthrough') fireAdsConversion();
+      }, true);
+    })();
+  </script>
+</body>
+</html>
