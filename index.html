@@ -66,17 +66,38 @@
   </footer>
   <script>
     (function () {
+      // Remember which ad brought the visitor (gclid / utm_*) so a later
+      // Book click can be tied back to it. Stored locally, nothing extra loads.
+      var ATTR_KEY = 'jk_attr';
+      var ATTR_PARAMS = ['gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+      function readAttr() {
+        try { return JSON.parse(localStorage.getItem(ATTR_KEY) || '{}') || {}; } catch (err) { return {}; }
+      }
+      function captureAttr() {
+        var attr = {};
+        try {
+          var qs = new URLSearchParams(location.search);
+          ATTR_PARAMS.forEach(function (k) { var v = qs.get(k); if (v) attr[k] = v.slice(0, 200); });
+          if (!Object.keys(attr).length) return;
+          attr.landed_at = new Date().toISOString().slice(0, 10);
+          localStorage.setItem(ATTR_KEY, JSON.stringify(attr));
+        } catch (err) { /* private mode or storage disabled */ }
+      }
+      captureAttr();
       function track(name, placement) {
+        var attr = readAttr();
         var params = {
           event_category: 'engagement',
           event_label: placement,
           transport_type: 'beacon'
         };
+        var data = { placement: placement };
+        ATTR_PARAMS.forEach(function (k) { if (attr[k]) { params[k] = attr[k]; data[k] = attr[k]; } });
         if (typeof gtag === 'function') {
           gtag('event', name, params);
         }
         if (typeof window.va === 'function') {
-          window.va('event', { name: name, data: { placement: placement } });
+          window.va('event', { name: name, data: data });
         }
       }
       document.addEventListener('click', function (e) {
