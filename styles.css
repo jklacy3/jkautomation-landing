@@ -12,9 +12,13 @@ body {
 }
 
 header, main, footer { max-width: 40rem; margin: 0 auto; padding: 0 1.25rem; }
-header { display: flex; align-items: center; gap: 0.75rem; padding-top: 1.5rem; }
-header img { height: 3rem; width: auto; }
-header p { margin: 0; font-weight: 700; color: var(--navy); }
+header { display: flex; align-items: center; padding-top: 1.5rem; }
+header .logo-lockup {
+  display: block;
+  height: clamp(2.35rem, 8vw, 3rem);
+  width: auto;
+  max-width: 100%;
+}
 
 h1, h2 { color: var(--navy); line-height: 1.15; }
 h1 { font-size: clamp(1.75rem, 5vw, 2.75rem); margin: 2.5rem 0 1rem; }
