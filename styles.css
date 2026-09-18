@@ -38,20 +38,12 @@ header.wrap {
 }
 
 .brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
-  color: var(--ink);
+  display: inline-block;
+  color: var(--navy);
   text-decoration: none;
   font-weight: 600;
-  font-size: 1rem;
-  letter-spacing: -0.01em;
-}
-
-.brand img {
-  display: block;
-  width: 2.25rem;
-  height: auto;
+  font-size: 1.25rem;
+  letter-spacing: 0.06em;
 }
 
 main.wrap {
