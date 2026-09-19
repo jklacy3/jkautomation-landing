@@ -234,3 +234,10 @@ footer p {
   .actions { align-items: stretch; flex-direction: column; }
   .btn { text-align: center; }
 }
+
+.proof {
+  border-left: 3px solid var(--navy);
+  padding-left: 0.9rem;
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+}
