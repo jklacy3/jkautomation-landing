@@ -6,10 +6,11 @@
   <title>Book a 15-minute walkthrough | JK Automation Solutions</title>
   <meta name="description" content="Tell John what's eating your time, then pick a 15-minute slot.">
   <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#000000">
   <link rel="icon" href="/jkas.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
   <!-- Google tag (gtag.js) AW-18446712626 + G-NCH603HL9H -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18446712626"></script>
@@ -26,49 +27,93 @@
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
   <script src="/track.js"></script>
+  <style>
+    /* The booking step is a single dark screen, no scroll furniture. */
+    body { background: var(--black); color: var(--white); }
+    .book-main { padding-top: 7.5rem; padding-bottom: 4rem; }
+    .book-grid { display: grid; gap: clamp(2.5rem, 6vw, 5rem); }
+    @media (min-width: 60rem) {
+      .book-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+    }
+    .book-steps { list-style: none; margin: 2rem 0 0; padding: 0; }
+    .book-steps li {
+      display: grid;
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+      gap: 1rem;
+      padding: 1.1rem 0;
+      border-top: 1px solid var(--line-dark);
+      color: var(--grey-dim);
+      font-size: 0.95rem;
+    }
+    .book-steps .num {
+      font-family: "Barlow Semi Condensed", Inter, sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: var(--grey);
+    }
+  </style>
 </head>
-<body>
-  <header class="wrap">
+<body class="book-page">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header is-stuck">
     <a class="brand" href="/">JKAS</a>
+    <nav class="nav">
+      <a class="nav-link" href="/">Back to site</a>
+    </nav>
   </header>
 
-  <main class="wrap">
-    <section class="hero">
-      <h1>Two questions, then pick your time.</h1>
-      <p class="lede">So John shows up to the call already knowing your situation. Takes about 20 seconds.</p>
+  <main class="wrap book-main" id="main">
+    <div class="book-grid">
 
-      <form id="book-form" class="form" novalidate>
-        <div class="field">
-          <label for="name">Your name</label>
-          <input id="name" name="name" type="text" autocomplete="name" required>
-          <p class="err" data-err="name" hidden>Please add your name.</p>
-        </div>
+      <div>
+        <p class="eyebrow">Step 1 of 2</p>
+        <h2>Two questions, then pick your time.</h2>
+        <p class="lede" style="margin-top:1.25rem">So John shows up already knowing your situation. Takes about 20 seconds.</p>
+        <ol class="book-steps">
+          <li><span class="num">01</span><span>Tell John what is eating your time</span></li>
+          <li><span class="num">02</span><span>Pick a 15-minute slot on his calendar</span></li>
+        </ol>
+      </div>
 
-        <div class="field">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required>
-          <p class="err" data-err="email" hidden>Please add a valid email.</p>
-        </div>
+      <div>
+        <form id="book-form" class="form" novalidate>
+          <div class="field">
+            <label for="name">Your name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required>
+            <p class="err" data-err="name" hidden>Please add your name.</p>
+          </div>
 
-        <div class="field">
-          <label for="task">What takes the most time right now? <span class="opt">(optional)</span></label>
-          <textarea id="task" name="task" rows="3" placeholder="Missed calls, chasing vendors, scheduling, invoicing&hellip;"></textarea>
-        </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required>
+            <p class="err" data-err="email" hidden>Please add a valid email.</p>
+          </div>
 
-        <p class="actions">
-          <button class="btn" type="submit" id="book-submit">Continue to calendar &rarr;</button>
+          <div class="field">
+            <label for="task">What takes the most time right now? <span class="opt">Optional</span></label>
+            <textarea id="task" name="task" rows="3" placeholder="Missed calls, chasing vendors, scheduling, invoicing&hellip;"></textarea>
+          </div>
+
+          <p class="actions" style="margin-top:2rem">
+            <button class="btn btn-solid" type="submit" id="book-submit">Continue to calendar</button>
+          </p>
+          <p class="fineprint">Next screen is John's Google Calendar, where you pick the slot. Your details are used to prepare for the call, nothing else.</p>
+        </form>
+
+        <p class="actions" id="fallback" hidden>
+          <a class="btn btn-solid" id="fallback-link" href="https://calendar.app.google/WTUQNErLQ6btWFNG7">Continue to calendar</a>
         </p>
-        <p class="fineprint">Next screen is John's Google Calendar, where you pick the slot. Your details are used to prepare for the call, nothing else.</p>
-      </form>
+      </div>
 
-      <p class="actions" id="fallback" hidden>
-        <a class="btn" id="fallback-link" href="https://calendar.app.google/WTUQNErLQ6btWFNG7">Continue to calendar &rarr;</a>
-      </p>
-    </section>
+    </div>
   </main>
 
-  <footer class="wrap">
-    <p>JK Automation Solutions &middot; <a class="mail" href="mailto:john@jkautomationsolutions.com">john@jkautomationsolutions.com</a></p>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>JK Automation Solutions &middot; Atlanta, GA</p>
+      <p><a href="mailto:john@jkautomationsolutions.com">john@jkautomationsolutions.com</a></p>
+    </div>
   </footer>
 
   <script>
@@ -132,8 +177,7 @@
       showErr('name', !name);
       showErr('email', !validEmail(email));
       if (!name || !validEmail(email)) {
-        var bad = !name ? 'name' : 'email';
-        document.getElementById(bad).focus();
+        document.getElementById(!name ? 'name' : 'email').focus();
         return;
       }
 
