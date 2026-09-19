@@ -76,10 +76,8 @@
     // ---- Config ------------------------------------------------------
     var CALENDAR_URL = 'https://calendar.app.google/WTUQNErLQ6btWFNG7';
 
-    // Google Ads conversion action for a completed booking request.
-    // Create a NEW action named e.g. "Lead - Booking Request" in Google Ads
-    // and paste its send_to value here. Until then this reuses the old label.
-    var CONVERSION_SEND_TO = 'AW-18446712626/umvJCPDZqvUcELL-idxE';
+    // Google Ads conversion action "Lead - Booking Request".
+    var CONVERSION_SEND_TO = 'AW-18446712626/f9s8CMfX3_0cELL-idxE';
 
     // Optional: a Google Form that receives the lead so nobody is lost if
     // they abandon the calendar step. Fill both in to switch it on.
@@ -151,6 +149,8 @@
         gtag('set', 'user_data', { email: email });
         gtag('event', 'conversion', {
           send_to: CONVERSION_SEND_TO,
+          value: 1.0,
+          currency: 'USD',
           event_callback: goToCalendar
         });
       }
