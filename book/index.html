@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book a 15-minute walkthrough | JK Automation Solutions</title>
+  <meta name="description" content="Tell John what's eating your time, then pick a 15-minute slot.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="icon" href="/jkas.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <!-- Google tag (gtag.js) AW-18446712626 + G-NCH603HL9H -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18446712626"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18446712626');
+    gtag('config', 'G-NCH603HL9H');
+  </script>
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script src="/track.js"></script>
+</head>
+<body>
+  <header class="wrap">
+    <a class="brand" href="/">JKAS</a>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>Two questions, then pick your time.</h1>
+      <p class="lede">So John shows up to the call already knowing your situation. Takes about 20 seconds.</p>
+
+      <form id="book-form" class="form" novalidate>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required>
+          <p class="err" data-err="name" hidden>Please add your name.</p>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required>
+          <p class="err" data-err="email" hidden>Please add a valid email.</p>
+        </div>
+
+        <div class="field">
+          <label for="task">What takes the most time right now? <span class="opt">(optional)</span></label>
+          <textarea id="task" name="task" rows="3" placeholder="Missed calls, chasing vendors, scheduling, invoicing&hellip;"></textarea>
+        </div>
+
+        <p class="actions">
+          <button class="btn" type="submit" id="book-submit">Continue to calendar &rarr;</button>
+        </p>
+        <p class="fineprint">Next screen is John's Google Calendar, where you pick the slot. Your details are used to prepare for the call, nothing else.</p>
+      </form>
+
+      <p class="actions" id="fallback" hidden>
+        <a class="btn" id="fallback-link" href="https://calendar.app.google/WTUQNErLQ6btWFNG7">Continue to calendar &rarr;</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <p>JK Automation Solutions &middot; <a class="mail" href="mailto:john@jkautomationsolutions.com">john@jkautomationsolutions.com</a></p>
+  </footer>
+
+  <script>
+  (function () {
+    // ---- Config ------------------------------------------------------
+    var CALENDAR_URL = 'https://calendar.app.google/WTUQNErLQ6btWFNG7';
+
+    // Google Ads conversion action for a completed booking request.
+    // Create a NEW action named e.g. "Lead - Booking Request" in Google Ads
+    // and paste its send_to value here. Until then this reuses the old label.
+    var CONVERSION_SEND_TO = 'AW-18446712626/umvJCPDZqvUcELL-idxE';
+
+    // Optional: a Google Form that receives the lead so nobody is lost if
+    // they abandon the calendar step. Fill both in to switch it on.
+    // FORM_ACTION: https://docs.google.com/forms/d/e/<FORM_ID>/formResponse
+    // FORM_FIELDS: the entry.NNNN ids from that form's prefilled link.
+    var FORM_ACTION = '';
+    var FORM_FIELDS = { name: '', email: '', task: '', gclid: '' };
+    // ------------------------------------------------------------------
+
+    var form = document.getElementById('book-form');
+    var submit = document.getElementById('book-submit');
+    var fallback = document.getElementById('fallback');
+    var handedOff = false;
+
+    document.getElementById('fallback-link').href = CALENDAR_URL;
+
+    function showErr(field, show) {
+      var el = document.querySelector('[data-err="' + field + '"]');
+      if (el) { el.hidden = !show; }
+      var input = document.getElementById(field);
+      if (input) { input.setAttribute('aria-invalid', show ? 'true' : 'false'); }
+    }
+
+    function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+    function goToCalendar() {
+      if (handedOff) return;
+      handedOff = true;
+      window.location.href = CALENDAR_URL;
+    }
+
+    function saveLead(lead) {
+      if (!FORM_ACTION || !FORM_FIELDS.email) return;
+      try {
+        var body = new FormData();
+        Object.keys(FORM_FIELDS).forEach(function (k) {
+          if (FORM_FIELDS[k] && lead[k]) { body.append(FORM_FIELDS[k], lead[k]); }
+        });
+        // no-cors: Google Forms accepts the POST but returns an opaque
+        // response, so this is fire-and-forget by design.
+        fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body: body });
+      } catch (err) { /* never block the booking on this */ }
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var name = form.name.value.trim();
+      var email = form.email.value.trim();
+      var task = form.task.value.trim();
+
+      showErr('name', !name);
+      showErr('email', !validEmail(email));
+      if (!name || !validEmail(email)) {
+        var bad = !name ? 'name' : 'email';
+        document.getElementById(bad).focus();
+        return;
+      }
+
+      submit.disabled = true;
+      submit.textContent = 'Opening calendar…';
+
+      var attr = (window.jkTrack && window.jkTrack.readAttr()) || {};
+      saveLead({ name: name, email: email, task: task, gclid: attr.gclid || '' });
+
+      // Enhanced conversions: lets Google match this lead to the ad click
+      // even when the gclid cookie is missing.
+      if (typeof gtag === 'function') {
+        gtag('set', 'user_data', { email: email });
+        gtag('event', 'conversion', {
+          send_to: CONVERSION_SEND_TO,
+          event_callback: goToCalendar
+        });
+      }
+      if (window.jkTrack) {
+        window.jkTrack.track('booking_request', { event_label: 'book_form', has_task: task ? 'yes' : 'no' });
+      }
+
+      // Never let a blocked tag strand the visitor.
+      setTimeout(goToCalendar, 1200);
+    });
+
+    // If JS-driven submit can't run for any reason, expose a plain link.
+    window.addEventListener('error', function () {
+      if (!handedOff) { fallback.hidden = false; }
+    });
+  })();
+  </script>
+</body>
+</html>

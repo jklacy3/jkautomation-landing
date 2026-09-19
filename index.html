@@ -31,7 +31,7 @@
     "potentialAction": {
       "@type": "ReserveAction",
       "name": "Book a 15-minute walkthrough",
-      "target": "https://calendar.app.google/WTUQNErLQ6btWFNG7"
+      "target": "https://www.jkautomationsolutions.com/book/"
     }
   }
   </script>
@@ -44,9 +44,8 @@
     gtag('js', new Date());
     gtag('config', 'AW-18446712626');
     gtag('config', 'G-NCH603HL9H');
-    // Page load only configs Ads + GA4. Do not send
-    // AW-18446712626/umvJCPDZqvUcELL-idxE on CTA clicks — that
-    // counted calendar-button clicks as conversions, not bookings.
+    // Page load only configs Ads + GA4. The booking conversion fires on
+    // /book/ after the form is completed, never on a CTA click here.
   </script>
   <!-- Vercel Web Analytics -->
   <script>
@@ -64,7 +63,7 @@
       <h1>Spend more time selling, and working with customers.</h1>
       <p class="lede">Tools that fit within their existing work style, for business owners in equine, real estate, finance, and health.</p>
       <p class="actions">
-        <a class="btn" data-track="book_walkthrough" data-placement="hero" href="https://calendar.app.google/WTUQNErLQ6btWFNG7">Book a 15-minute walkthrough</a>
+        <a class="btn" data-track="book_walkthrough" data-placement="hero" href="/book/">Book a 15-minute walkthrough</a>
         <a class="mail" data-track="email_john" data-placement="hero" href="mailto:john@jkautomationsolutions.com">Or email John</a>
       </p>
     </section>
@@ -94,7 +93,7 @@
       <h2>Offer + next step</h2>
       <p>Hourly or per outcome, and ongoing support if required. Usually a few hours, if the workflow is complicated, it can take a few days.</p>
       <p class="actions">
-        <a class="btn" data-track="book_walkthrough" data-placement="bottom" href="https://calendar.app.google/WTUQNErLQ6btWFNG7">Book a 15-minute walkthrough</a>
+        <a class="btn" data-track="book_walkthrough" data-placement="bottom" href="/book/">Book a 15-minute walkthrough</a>
       </p>
     </section>
 
@@ -114,48 +113,6 @@
   <footer class="wrap">
     <p>JK Automation Solutions</p>
   </footer>
-  <script>
-    (function () {
-      // Remember which ad brought the visitor (gclid / utm_*) so a later
-      // Book click can be tied back to it. Stored locally, nothing extra loads.
-      var ATTR_KEY = 'jk_attr';
-      var ATTR_PARAMS = ['gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
-      function readAttr() {
-        try { return JSON.parse(localStorage.getItem(ATTR_KEY) || '{}') || {}; } catch (err) { return {}; }
-      }
-      function captureAttr() {
-        var attr = {};
-        try {
-          var qs = new URLSearchParams(location.search);
-          ATTR_PARAMS.forEach(function (k) { var v = qs.get(k); if (v) attr[k] = v.slice(0, 200); });
-          if (!Object.keys(attr).length) return;
-          attr.landed_at = new Date().toISOString().slice(0, 10);
-          localStorage.setItem(ATTR_KEY, JSON.stringify(attr));
-        } catch (err) { /* private mode or storage disabled */ }
-      }
-      captureAttr();
-      function track(name, placement) {
-        var attr = readAttr();
-        var params = {
-          event_category: 'engagement',
-          event_label: placement,
-          transport_type: 'beacon'
-        };
-        var data = { placement: placement };
-        ATTR_PARAMS.forEach(function (k) { if (attr[k]) { params[k] = attr[k]; data[k] = attr[k]; } });
-        if (typeof gtag === 'function') {
-          gtag('event', name, params);
-        }
-        if (typeof window.va === 'function') {
-          window.va('event', { name: name, data: data });
-        }
-      }
-      document.addEventListener('click', function (e) {
-        var a = e.target && e.target.closest ? e.target.closest('a[data-track]') : null;
-        if (!a) return;
-        track(a.getAttribute('data-track'), a.getAttribute('data-placement') || '');
-      }, true);
-    })();
-  </script>
+  <script src="/track.js"></script>
 </body>
 </html>
