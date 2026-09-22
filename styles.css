@@ -288,6 +288,20 @@ section {
   .section-head .lede { margin: 0; }
 }
 
+/* ---------- Outcome groups ---------- */
+
+.group-label {
+  font-family: "Barlow Semi Condensed", Inter, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--grey);
+  margin: 2.75rem 0 0;
+}
+
+.group-label:first-of-type { margin-top: 0; }
+
 /* ---------- Numbered list ---------- */
 
 .items {
