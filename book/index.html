@@ -91,9 +91,18 @@
           </div>
 
           <div class="field">
-            <label for="task">What takes the most time right now? <span class="opt">Optional</span></label>
-            <textarea id="task" name="task" rows="3" placeholder="Missed calls, chasing vendors, scheduling, invoicing&hellip;"></textarea>
+            <label for="business">Business name</label>
+            <input id="business" name="business" type="text" autocomplete="organization" required>
+            <p class="err" data-err="business" hidden>Please add your business name.</p>
           </div>
+
+          <div class="field">
+            <label for="task">What takes the most time right now?</label>
+            <textarea id="task" name="task" rows="3" placeholder="Missed calls, chasing vendors, scheduling, invoicing&hellip;" required></textarea>
+            <p class="err" data-err="task" hidden>Please tell us what takes the most time.</p>
+          </div>
+
+          <input type="hidden" id="gclid" name="gclid" value="">
 
           <p class="actions" style="margin-top:2rem">
             <button class="btn btn-solid" type="submit" id="book-submit">Continue to calendar</button>
@@ -128,8 +137,8 @@
     // they abandon the calendar step. Fill both in to switch it on.
     // FORM_ACTION: https://docs.google.com/forms/d/e/<FORM_ID>/formResponse
     // FORM_FIELDS: the entry.NNNN ids from that form's prefilled link.
-    var FORM_ACTION = '';
-    var FORM_FIELDS = { name: '', email: '', task: '', gclid: '' };
+    var FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSeGYPSuu9fcvmVr-8R3EpZDl9FlTIwK1yXONM4F2P9GrvNW4A/formResponse';
+    var FORM_FIELDS = { name: 'entry.1538416761', email: 'entry.268714676', business: 'entry.976942843', task: 'entry.709829618', gclid: 'entry.2130794918' };
     // ------------------------------------------------------------------
 
     var form = document.getElementById('book-form');
@@ -138,6 +147,17 @@
     var handedOff = false;
 
     document.getElementById('fallback-link').href = CALENDAR_URL;
+
+    // Prefer the live click id, then a stored cookie / localStorage value.
+    (function fillGclid() {
+      var el = document.getElementById('gclid');
+      var q = new URLSearchParams(location.search).get('gclid');
+      if (q) { el.value = q; return; }
+      var m = document.cookie.match(/(?:^|;\s*)gclid=([^;]+)/);
+      if (m) { el.value = decodeURIComponent(m[1]); return; }
+      var attr = (window.jkTrack && window.jkTrack.readAttr()) || {};
+      el.value = attr.gclid || '';
+    })();
 
     function showErr(field, show) {
       var el = document.querySelector('[data-err="' + field + '"]');
@@ -172,12 +192,16 @@
 
       var name = form.name.value.trim();
       var email = form.email.value.trim();
+      var business = form.business.value.trim();
       var task = form.task.value.trim();
 
       showErr('name', !name);
       showErr('email', !validEmail(email));
-      if (!name || !validEmail(email)) {
-        document.getElementById(!name ? 'name' : 'email').focus();
+      showErr('business', !business);
+      showErr('task', !task);
+      if (!name || !validEmail(email) || !business || !task) {
+        var first = !name ? 'name' : !validEmail(email) ? 'email' : !business ? 'business' : 'task';
+        document.getElementById(first).focus();
         return;
       }
 
@@ -185,7 +209,8 @@
       submit.textContent = 'Opening calendar…';
 
       var attr = (window.jkTrack && window.jkTrack.readAttr()) || {};
-      saveLead({ name: name, email: email, task: task, gclid: attr.gclid || '' });
+      var gclid = (form.gclid && form.gclid.value.trim()) || attr.gclid || '';
+      saveLead({ name: name, email: email, business: business, task: task, gclid: gclid });
 
       // Enhanced conversions: lets Google match this lead to the ad click
       // even when the gclid cookie is missing.
